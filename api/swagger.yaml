@@ -1,0 +1,233 @@
+---
+swagger: "2.0"
+info:
+  description: "Coding challenge: Simple Blog Application"
+  version: "1.0.0"
+  title: "Simple Blog"
+host: "api.example.com"
+basePath: "/v1"
+paths:
+  /blog-posts:
+    get:
+      tags:
+      - "blog-post"
+      summary: "Get all blog posts"
+      operationId: "getBlogPosts"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BlogPost"
+      x-swagger-router-controller: "BlogPost"
+  /blog-post/{id}:
+    get:
+      tags:
+      - "blog-post"
+      summary: "Get blog post by ID"
+      operationId: "getBlogPostById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of blog post to return"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/BlogPost"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Blog post not found"
+      x-swagger-router-controller: "BlogPost"
+  /blog-post:
+    post:
+      tags:
+      - "blog-post"
+      summary: "Add a new blog post"
+      operationId: "addBlogPost"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Blog post object to add"
+        required: true
+        schema:
+          $ref: "#/definitions/BlogPost"
+      deprecated: true
+      responses:
+        "200":
+          description: "Successful operation"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "BlogPost"
+    put:
+      tags:
+      - "blog-post"
+      summary: "Update an existing blog post"
+      operationId: "updateBlogPost"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Blog post object to update"
+        required: true
+        schema:
+          $ref: "#/definitions/BlogPost"
+      deprecated: true
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Blog post not found"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "BlogPost"
+  /blog-post/{id}/comments:
+    get:
+      tags:
+      - "blog-post-comment"
+      summary: "Get all blog post comments"
+      operationId: "getBlogPostCommentsByBlogPostId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of blog post to return comments for"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BlogPostComment"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Blog post not found"
+      x-swagger-router-controller: "BlogPostComment"
+  /blog-post-comment:
+    post:
+      tags:
+      - "blog-post-comment"
+      summary: "Add a new blog post comment"
+      operationId: "addBlogPostComment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Blog post comment object to add"
+        required: true
+        schema:
+          $ref: "#/definitions/BlogPostComment"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/BlogPostComment"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "BlogPostComment"
+    put:
+      tags:
+      - "blog-post-comment"
+      summary: "Update an existing blog post comment"
+      operationId: "updateBlogPostComment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Blog post comment object to update"
+        required: true
+        schema:
+          $ref: "#/definitions/BlogPostComment"
+      responses:
+        "200":
+          description: "Successful operation"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "BlogPostComment"
+definitions:
+  BlogPost:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      dateModified:
+        type: "string"
+        format: "date-time"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      content:
+        type: "string"
+      author:
+        type: "string"
+      numComments:
+        type: "integer"
+        format: "int32"
+    example:
+      id: 0
+      dateModified: "2000-01-23T04:56:07.000+00:00"
+      title: "title"
+      description: "description"
+      content: "content"
+      author: "author"
+      numComments: 4
+  BlogPostComment:
+    type: "object"
+    required:
+      - "content"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      blogPostId:
+        type: "integer"
+        format: "int32"
+      parentId:
+        type: "integer"
+        format: "int32"
+      dateCreated:
+        type: "string"
+        format: "date-time"
+      content:
+        type: "string"
+      user:
+        type: "string"
+    example:
+      id: 0
+      blogPostId: 1
+      parentId: 6
+      dateCreated: "2000-01-23T04:56:07.000+00:00"
+      content: "content"
+      user: "user"
